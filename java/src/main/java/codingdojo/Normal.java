@@ -4,9 +4,9 @@ public class Normal extends ErrorResult {
 
     private final String message;
 
-    protected Normal(Exception exception, String formulaName, String presentation) {
+    protected Normal(Exception exception, String formulaName, String presentation, String message) {
         super(exception, formulaName, presentation);
-        message = exception.getMessage();
+        this.message = message;
     }
 
     @Override

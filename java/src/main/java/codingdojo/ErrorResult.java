@@ -22,7 +22,7 @@ public abstract class ErrorResult {
         } else if (exception instanceof SpreadsheetException && "No matches found".equals(exception.getMessage())) {
             return new NoMatchesFound((SpreadsheetException) exception, formulaName, spreadsheetWorkbook.getPresentation());
         } else {
-            return new Normal(exception, formulaName, spreadsheetWorkbook.getPresentation());
+            return new Normal(exception, formulaName, spreadsheetWorkbook.getPresentation(), exception.getMessage());
         }
     }
 
