@@ -1,18 +1,18 @@
 package codingdojo;
 
-public class MessageEnricher {
+public class ErrorResult {
     private final Exception exception;
     private final String formulaName;
     private final String presentation;
 
-    protected MessageEnricher(Exception exception, String formulaName, String presentation) {
+    protected ErrorResult(Exception exception, String formulaName, String presentation) {
         this.exception = exception;
         this.formulaName = formulaName;
         this.presentation = presentation;
     }
 
-    public static MessageEnricher enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception e) {
-        return new MessageEnricher(e, spreadsheetWorkbook.getFormulaName(), spreadsheetWorkbook.getPresentation());
+    public static ErrorResult enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception e) {
+        return new ErrorResult(e, spreadsheetWorkbook.getFormulaName(), spreadsheetWorkbook.getPresentation());
     }
 
     private static boolean stackTraceContains(Exception e, String message) {
