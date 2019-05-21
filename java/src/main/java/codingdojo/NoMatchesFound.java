@@ -5,16 +5,12 @@ public class NoMatchesFound extends ErrorResult {
         super(exception, formulaName, presentation);
     }
 
-    private static String parseNoMatchException(Exception e, String formulaName) {
-        if (e instanceof SpreadsheetException) {
-            SpreadsheetException we = (SpreadsheetException) e;
-            return "No match found for token [" + we.getToken() + "] related to formula '" + formulaName + "'.";
-        }
-        return e.getMessage();
-    }
-
     @Override
     public String getMessage() {
-        return parseNoMatchException(exception, formulaName);
+        if (exception instanceof SpreadsheetException) {
+            SpreadsheetException we = (SpreadsheetException) exception;
+            return "No match found for token [" + we.getToken() + "] related to formula '" + formulaName + "'.";
+        }
+        return exception.getMessage();
     }
 }
