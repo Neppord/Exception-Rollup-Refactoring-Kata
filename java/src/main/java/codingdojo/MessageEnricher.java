@@ -5,7 +5,7 @@ public class MessageEnricher {
     private final String message;
     private final String presentation;
 
-    public MessageEnricher(String formulaName, String message, String presentation) {
+    protected MessageEnricher(String formulaName, String message, String presentation) {
 
         this.formulaName = formulaName;
         this.message = message;
@@ -33,8 +33,6 @@ public class MessageEnricher {
             return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
 
         }
-
-
         return new MessageEnricher(formulaName, e.getMessage(), spreadsheetWorkbook.getPresentation());
     }
 
