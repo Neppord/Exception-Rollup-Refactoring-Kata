@@ -11,8 +11,19 @@ public class ErrorResult {
         this.presentation = presentation;
     }
 
-    public static ErrorResult enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception e) {
-        return new ErrorResult(e, spreadsheetWorkbook.getFormulaName(), spreadsheetWorkbook.getPresentation());
+    public static ErrorResult enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception exception) {
+        String formulaName = spreadsheetWorkbook.getFormulaName();
+        if (exception instanceof ExpressionParseException) {
+            return new ExpressionParse(exception, formulaName, spreadsheetWorkbook.getPresentation());
+        } else if (exception.getMessage().startsWith("Circular Reference")) {
+            return new CircularReference(exception, formulaName, spreadsheetWorkbook.getPresentation());
+        } else if ("Object reference not set to an instance of an object".equals(exception.getMessage()) && stackTraceContains(exception, "vLookup")) {
+            return new LookupTable(exception, formulaName, spreadsheetWorkbook.getPresentation());
+        } else if ("No matches found".equals(exception.getMessage())) {
+            return new NoMatchesFound(exception, formulaName, spreadsheetWorkbook.getPresentation());
+        } else {
+            return new Normal(exception, formulaName, spreadsheetWorkbook.getPresentation());
+        }
     }
 
     private static boolean stackTraceContains(Exception e, String message) {
