@@ -1,12 +1,10 @@
 package codingdojo;
 
 public abstract class ErrorResult {
-    protected final Exception exception;
     protected final String formulaName;
     protected final String presentation;
 
-    protected ErrorResult(Exception exception, String formulaName, String presentation) {
-        this.exception = exception;
+    protected ErrorResult(String formulaName, String presentation) {
         this.formulaName = formulaName;
         this.presentation = presentation;
     }

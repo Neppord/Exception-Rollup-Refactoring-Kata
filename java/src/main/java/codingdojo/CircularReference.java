@@ -7,7 +7,7 @@ public class CircularReference extends ErrorResult {
     private List<String> cells;
 
     protected CircularReference(SpreadsheetException exception, String formulaName, String presentation) {
-        super(exception, formulaName, presentation);
+        super(formulaName, presentation);
         cells = exception.getCells();
     }
 

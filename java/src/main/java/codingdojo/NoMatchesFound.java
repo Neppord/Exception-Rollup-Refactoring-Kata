@@ -5,7 +5,7 @@ public class NoMatchesFound extends ErrorResult {
     private String token;
 
     protected NoMatchesFound(SpreadsheetException exception, String formulaName, String presentation) {
-        super(exception, formulaName, presentation);
+        super(formulaName, presentation);
         token = exception.getToken();
     }
 
