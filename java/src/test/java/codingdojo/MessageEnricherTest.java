@@ -10,12 +10,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MessageEnricherTest {
 
-    private MessageEnricher enricher;
     private SpreadsheetWorkbook worksheet;
 
     @BeforeEach
     void setup() {
-        enricher = new MessageEnricher();
         worksheet = new SpreadsheetWorkbook();
     }
 
