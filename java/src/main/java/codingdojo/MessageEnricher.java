@@ -66,7 +66,7 @@ public class MessageEnricher {
     public String toString() {
         return "ErrorResult{" +
                 "formulaName='" + formulaName + '\'' +
-                ", message='" + message + '\'' +
+                ", message='" + getMessage() + '\'' +
                 ", presentation='" + presentation + '\'' +
                 '}';
     }
