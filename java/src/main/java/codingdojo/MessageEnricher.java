@@ -3,13 +3,11 @@ package codingdojo;
 public class MessageEnricher {
     private final Exception exception;
     private final String formulaName;
-    private final String message;
     private final String presentation;
 
-    protected MessageEnricher(Exception exception, String formulaName, String message, String presentation) {
+    protected MessageEnricher(Exception exception, String formulaName, String presentation) {
         this.exception = exception;
         this.formulaName = formulaName;
-        this.message = message;
         this.presentation = presentation;
     }
 
@@ -17,7 +15,7 @@ public class MessageEnricher {
 
         String formulaName = spreadsheetWorkbook.getFormulaName();
         String error = getMessage(e, formulaName);
-        return new MessageEnricher(e, formulaName, error, spreadsheetWorkbook.getPresentation());
+        return new MessageEnricher(e, formulaName, spreadsheetWorkbook.getPresentation());
     }
 
     private static String getMessage(Exception e, String formulaName) {
