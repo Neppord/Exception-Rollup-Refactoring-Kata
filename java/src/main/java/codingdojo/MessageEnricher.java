@@ -76,7 +76,7 @@ public class MessageEnricher {
     }
 
     public String getMessage() {
-        return message;
+        return getMessage(exception, formulaName);
     }
 
     public String getPresentation() {
