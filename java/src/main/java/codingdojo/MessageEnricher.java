@@ -1,56 +1,38 @@
 package codingdojo;
 
+import java.util.Arrays;
 
 public class MessageEnricher {
 
     public ErrorResult enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception e) {
 
         String formulaName = spreadsheetWorkbook.getFormulaName();
+        String presentation = spreadsheetWorkbook.getPresentation();
+        String error = getErrorMessage(e, formulaName);
+        return new ErrorResult(formulaName, error, presentation);
+    }
 
+    private String getErrorMessage(Exception e, String formulaName) {
+        String error = e.getMessage();
         if (e instanceof ExpressionParseException) {
-            String error = "Invalid expression found in tax formula [" + formulaName + "]. Check that separators and delimiters use the English locale.";
-            return new ErrorResult(formulaName, error, spreadsheetWorkbook.getPresentation());
+            error = "Invalid expression found in tax formula [" + formulaName + "]. Check that separators and delimiters use the English locale.";
+        } else if (error.startsWith("Circular Reference") && e instanceof SpreadsheetException) {
+            SpreadsheetException we = (SpreadsheetException) e;
+            error = "Circular Reference in spreadsheet related to formula '" + formulaName + "'. Cells: " + we.getCells();
+        } else if ("Object reference not set to an instance of an object".equals(error)
+            && stackTraceContains(e, "vLookup")) {
+            error = "Missing Lookup Table";
+        } else if ("No matches found".equals(error) && e instanceof SpreadsheetException) {
+            SpreadsheetException we = (SpreadsheetException) e;
+            error = "No match found for token [" + we.getToken() + "] related to formula '" + formulaName + "'.";
         }
-        if (e.getMessage().startsWith("Circular Reference")) {
-            String error = parseCircularReferenceException(e, formulaName);
-            return new ErrorResult(formulaName, error, spreadsheetWorkbook.getPresentation());
-        }
-        if ("Object reference not set to an instance of an object".equals(e.getMessage())
-                && stackTraceContains(e,"vLookup")) {
-            return new ErrorResult(formulaName, "Missing Lookup Table", spreadsheetWorkbook.getPresentation());
-        }
-        if ("No matches found".equals(e.getMessage())) {
-            String error = parseNoMatchException(e, formulaName);
-            return new ErrorResult(formulaName, error, spreadsheetWorkbook.getPresentation());
-
-        }
-
-
-        return new ErrorResult(formulaName, e.getMessage(), spreadsheetWorkbook.getPresentation());
+        return error;
     }
 
     private boolean stackTraceContains(Exception e, String message) {
-        for (StackTraceElement ste : e.getStackTrace()) {
-            if (ste.getMethodName().contains(message)) {
-                return true;
-            }
-        }
-        return false;
+        return Arrays.stream(e.getStackTrace())
+            .anyMatch(ste -> ste.getMethodName().contains(message))
+        ;
     }
 
-    private String parseNoMatchException(Exception e, String formulaName) {
-        if (e instanceof SpreadsheetException) {
-            SpreadsheetException we = (SpreadsheetException) e;
-            return "No match found for token [" + we.getToken() + "] related to formula '" + formulaName + "'.";
-        }
-        return e.getMessage();
-    }
-
-    private String parseCircularReferenceException(Exception e, String formulaName) {
-        if (e instanceof SpreadsheetException) {
-            SpreadsheetException we = (SpreadsheetException) e;
-            return "Circular Reference in spreadsheet related to formula '" + formulaName + "'. Cells: " + we.getCells();
-        }
-        return e.getMessage();
-    }
 }
