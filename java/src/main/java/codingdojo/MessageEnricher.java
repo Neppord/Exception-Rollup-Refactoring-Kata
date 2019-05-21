@@ -14,7 +14,6 @@ public class MessageEnricher {
     public static MessageEnricher enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception e) {
 
         String formulaName = spreadsheetWorkbook.getFormulaName();
-        String error = getMessage(e, formulaName);
         return new MessageEnricher(e, formulaName, spreadsheetWorkbook.getPresentation());
     }
 
