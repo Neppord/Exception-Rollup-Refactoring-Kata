@@ -15,24 +15,20 @@ public class MessageEnricher {
     public static MessageEnricher enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception e) {
 
         String formulaName = spreadsheetWorkbook.getFormulaName();
-
+        String error;
         if (e instanceof ExpressionParseException) {
-            String error = "Invalid expression found in tax formula [" + formulaName + "]. Check that separators and delimiters use the English locale.";
-            return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
+            error = "Invalid expression found in tax formula [" + formulaName + "]. Check that separators and delimiters use the English locale.";
         } else if (e.getMessage().startsWith("Circular Reference")) {
-            String error = parseCircularReferenceException(e, formulaName);
-            return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
+            error = parseCircularReferenceException(e, formulaName);
         } else if ("Object reference not set to an instance of an object".equals(e.getMessage())
             && stackTraceContains(e, "vLookup")) {
-            String error = "Missing Lookup Table";
-            return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
+            error = "Missing Lookup Table";
         } else if ("No matches found".equals(e.getMessage())) {
-            String error = parseNoMatchException(e, formulaName);
-            return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
+            error = parseNoMatchException(e, formulaName);
         } else {
-            String error = e.getMessage();
-            return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
+            error = e.getMessage();
         }
+        return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
     }
 
     private static boolean stackTraceContains(Exception e, String message) {
