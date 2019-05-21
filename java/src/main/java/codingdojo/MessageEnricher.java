@@ -3,7 +3,7 @@ package codingdojo;
 
 public class MessageEnricher {
 
-    public ErrorResult enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception e) {
+    public static ErrorResult enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception e) {
 
         String formulaName = spreadsheetWorkbook.getFormulaName();
 
@@ -29,7 +29,7 @@ public class MessageEnricher {
         return new ErrorResult(formulaName, e.getMessage(), spreadsheetWorkbook.getPresentation());
     }
 
-    private boolean stackTraceContains(Exception e, String message) {
+    private static boolean stackTraceContains(Exception e, String message) {
         for (StackTraceElement ste : e.getStackTrace()) {
             if (ste.getMethodName().contains(message)) {
                 return true;
@@ -38,7 +38,7 @@ public class MessageEnricher {
         return false;
     }
 
-    private String parseNoMatchException(Exception e, String formulaName) {
+    private static String parseNoMatchException(Exception e, String formulaName) {
         if (e instanceof SpreadsheetException) {
             SpreadsheetException we = (SpreadsheetException) e;
             return "No match found for token [" + we.getToken() + "] related to formula '" + formulaName + "'.";
@@ -46,7 +46,7 @@ public class MessageEnricher {
         return e.getMessage();
     }
 
-    private String parseCircularReferenceException(Exception e, String formulaName) {
+    private static String parseCircularReferenceException(Exception e, String formulaName) {
         if (e instanceof SpreadsheetException) {
             SpreadsheetException we = (SpreadsheetException) e;
             return "Circular Reference in spreadsheet related to formula '" + formulaName + "'. Cells: " + we.getCells();
