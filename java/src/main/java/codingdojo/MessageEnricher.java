@@ -30,7 +30,8 @@ public class MessageEnricher {
             String error = parseNoMatchException(e, formulaName);
             return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
         } else {
-            return new MessageEnricher(formulaName, e.getMessage(), spreadsheetWorkbook.getPresentation());
+            String error = e.getMessage();
+            return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
         }
     }
 
