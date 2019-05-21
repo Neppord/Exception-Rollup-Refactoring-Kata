@@ -4,9 +4,9 @@ public class NoMatchesFound extends ErrorResult {
 
     private String token;
 
-    protected NoMatchesFound(SpreadsheetException exception, String formulaName, String presentation) {
+    protected NoMatchesFound(String formulaName, String presentation, String token) {
         super(formulaName, presentation);
-        token = exception.getToken();
+        this.token = token;
     }
 
     @Override

@@ -6,9 +6,9 @@ public class CircularReference extends ErrorResult {
 
     private List<String> cells;
 
-    protected CircularReference(SpreadsheetException exception, String formulaName, String presentation) {
+    protected CircularReference(String formulaName, String presentation, List<String> cells) {
         super(formulaName, presentation);
-        cells = exception.getCells();
+        this.cells = cells;
     }
 
     @Override
