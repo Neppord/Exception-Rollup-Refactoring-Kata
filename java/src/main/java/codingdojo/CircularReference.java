@@ -1,16 +1,18 @@
 package codingdojo;
 
+import java.util.List;
+
 public class CircularReference extends ErrorResult {
-    protected CircularReference(Exception exception, String formulaName, String presentation) {
+
+    private List<String> cells;
+
+    protected CircularReference(SpreadsheetException exception, String formulaName, String presentation) {
         super(exception, formulaName, presentation);
+        cells = exception.getCells();
     }
 
     @Override
     public String getMessage() {
-        if (exception instanceof SpreadsheetException) {
-            SpreadsheetException we = (SpreadsheetException) exception;
-            return "Circular Reference in spreadsheet related to formula '" + formulaName + "'. Cells: " + we.getCells();
-        }
-        return exception.getMessage();
+        return "Circular Reference in spreadsheet related to formula '" + formulaName + "'. Cells: " + cells;
     }
 }
