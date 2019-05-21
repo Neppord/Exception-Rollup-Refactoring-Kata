@@ -19,22 +19,19 @@ public class MessageEnricher {
         if (e instanceof ExpressionParseException) {
             String error = "Invalid expression found in tax formula [" + formulaName + "]. Check that separators and delimiters use the English locale.";
             return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
-        }
-        if (e.getMessage().startsWith("Circular Reference")) {
+        } else if (e.getMessage().startsWith("Circular Reference")) {
             String error = parseCircularReferenceException(e, formulaName);
             return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
-        }
-        if ("Object reference not set to an instance of an object".equals(e.getMessage())
-                && stackTraceContains(e,"vLookup")) {
+        } else if ("Object reference not set to an instance of an object".equals(e.getMessage())
+            && stackTraceContains(e, "vLookup")) {
             String error = "Missing Lookup Table";
             return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
-        }
-        if ("No matches found".equals(e.getMessage())) {
+        } else if ("No matches found".equals(e.getMessage())) {
             String error = parseNoMatchException(e, formulaName);
             return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
-
+        } else {
+            return new MessageEnricher(formulaName, e.getMessage(), spreadsheetWorkbook.getPresentation());
         }
-        return new MessageEnricher(formulaName, e.getMessage(), spreadsheetWorkbook.getPresentation());
     }
 
     private static boolean stackTraceContains(Exception e, String message) {
