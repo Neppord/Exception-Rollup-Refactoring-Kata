@@ -26,7 +26,8 @@ public class MessageEnricher {
         }
         if ("Object reference not set to an instance of an object".equals(e.getMessage())
                 && stackTraceContains(e,"vLookup")) {
-            return new MessageEnricher(formulaName, "Missing Lookup Table", spreadsheetWorkbook.getPresentation());
+            String error = "Missing Lookup Table";
+            return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
         }
         if ("No matches found".equals(e.getMessage())) {
             String error = parseNoMatchException(e, formulaName);
