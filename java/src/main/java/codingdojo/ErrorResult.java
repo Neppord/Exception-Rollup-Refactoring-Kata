@@ -1,9 +1,9 @@
 package codingdojo;
 
 public class ErrorResult {
-    private final Exception exception;
-    private final String formulaName;
-    private final String presentation;
+    protected final Exception exception;
+    protected final String formulaName;
+    protected final String presentation;
 
     protected ErrorResult(Exception exception, String formulaName, String presentation) {
         this.exception = exception;
