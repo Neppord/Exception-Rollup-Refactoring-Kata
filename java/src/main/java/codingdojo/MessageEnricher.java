@@ -15,6 +15,11 @@ public class MessageEnricher {
     public static MessageEnricher enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception e) {
 
         String formulaName = spreadsheetWorkbook.getFormulaName();
+        String error = getMessage(e, formulaName);
+        return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
+    }
+
+    private static String getMessage(Exception e, String formulaName) {
         String error;
         if (e instanceof ExpressionParseException) {
             error = "Invalid expression found in tax formula [" + formulaName + "]. Check that separators and delimiters use the English locale.";
@@ -28,7 +33,7 @@ public class MessageEnricher {
         } else {
             error = e.getMessage();
         }
-        return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
+        return error;
     }
 
     private static boolean stackTraceContains(Exception e, String message) {
