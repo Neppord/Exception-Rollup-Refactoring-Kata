@@ -1,41 +1,41 @@
 package codingdojo;
 
-public class ErrorResult {
+public class MessageEnricher {
     private final String formulaName;
     private final String message;
     private final String presentation;
 
-    public ErrorResult(String formulaName, String message, String presentation) {
+    public MessageEnricher(String formulaName, String message, String presentation) {
 
         this.formulaName = formulaName;
         this.message = message;
         this.presentation = presentation;
     }
 
-    public static ErrorResult enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception e) {
+    public static MessageEnricher enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception e) {
 
         String formulaName = spreadsheetWorkbook.getFormulaName();
 
         if (e instanceof ExpressionParseException) {
             String error = "Invalid expression found in tax formula [" + formulaName + "]. Check that separators and delimiters use the English locale.";
-            return new ErrorResult(formulaName, error, spreadsheetWorkbook.getPresentation());
+            return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
         }
         if (e.getMessage().startsWith("Circular Reference")) {
             String error = parseCircularReferenceException(e, formulaName);
-            return new ErrorResult(formulaName, error, spreadsheetWorkbook.getPresentation());
+            return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
         }
         if ("Object reference not set to an instance of an object".equals(e.getMessage())
                 && stackTraceContains(e,"vLookup")) {
-            return new ErrorResult(formulaName, "Missing Lookup Table", spreadsheetWorkbook.getPresentation());
+            return new MessageEnricher(formulaName, "Missing Lookup Table", spreadsheetWorkbook.getPresentation());
         }
         if ("No matches found".equals(e.getMessage())) {
             String error = parseNoMatchException(e, formulaName);
-            return new ErrorResult(formulaName, error, spreadsheetWorkbook.getPresentation());
+            return new MessageEnricher(formulaName, error, spreadsheetWorkbook.getPresentation());
 
         }
 
 
-        return new ErrorResult(formulaName, e.getMessage(), spreadsheetWorkbook.getPresentation());
+        return new MessageEnricher(formulaName, e.getMessage(), spreadsheetWorkbook.getPresentation());
     }
 
     private static boolean stackTraceContains(Exception e, String message) {
