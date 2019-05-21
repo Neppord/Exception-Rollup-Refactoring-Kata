@@ -12,9 +12,7 @@ public class MessageEnricher {
     }
 
     public static MessageEnricher enrichError(SpreadsheetWorkbook spreadsheetWorkbook, Exception e) {
-
-        String formulaName = spreadsheetWorkbook.getFormulaName();
-        return new MessageEnricher(e, formulaName, spreadsheetWorkbook.getPresentation());
+        return new MessageEnricher(e, spreadsheetWorkbook.getFormulaName(), spreadsheetWorkbook.getPresentation());
     }
 
     private static boolean stackTraceContains(Exception e, String message) {
