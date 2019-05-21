@@ -17,23 +17,6 @@ public class MessageEnricher {
         return new MessageEnricher(e, formulaName, spreadsheetWorkbook.getPresentation());
     }
 
-    private static String getMessage(Exception e, String formulaName) {
-        String error;
-        if (e instanceof ExpressionParseException) {
-            error = "Invalid expression found in tax formula [" + formulaName + "]. Check that separators and delimiters use the English locale.";
-        } else if (e.getMessage().startsWith("Circular Reference")) {
-            error = parseCircularReferenceException(e, formulaName);
-        } else if ("Object reference not set to an instance of an object".equals(e.getMessage())
-            && stackTraceContains(e, "vLookup")) {
-            error = "Missing Lookup Table";
-        } else if ("No matches found".equals(e.getMessage())) {
-            error = parseNoMatchException(e, formulaName);
-        } else {
-            error = e.getMessage();
-        }
-        return error;
-    }
-
     private static boolean stackTraceContains(Exception e, String message) {
         for (StackTraceElement ste : e.getStackTrace()) {
             if (ste.getMethodName().contains(message)) {
@@ -73,7 +56,20 @@ public class MessageEnricher {
     }
 
     public String getMessage() {
-        return getMessage(exception, formulaName);
+        String error;
+        if (exception instanceof ExpressionParseException) {
+            error = "Invalid expression found in tax formula [" + formulaName + "]. Check that separators and delimiters use the English locale.";
+        } else if (exception.getMessage().startsWith("Circular Reference")) {
+            error = parseCircularReferenceException(exception, formulaName);
+        } else if ("Object reference not set to an instance of an object".equals(exception.getMessage())
+            && stackTraceContains(exception, "vLookup")) {
+            error = "Missing Lookup Table";
+        } else if ("No matches found".equals(exception.getMessage())) {
+            error = parseNoMatchException(exception, formulaName);
+        } else {
+            error = exception.getMessage();
+        }
+        return error;
     }
 
     public String getPresentation() {
